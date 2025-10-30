@@ -2,46 +2,91 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [q, setQ] = useState('');
 
   const handleLogout = () => {
-    logout();         // clear auth state
-    navigate('/');    // redirect to home
+    logout();
+    navigate('/');
   };
 
   return (
-    <header className='nav'>
-      <div className='nav-inner container'>
-        <Link to='/' className='brand'>
-          <img src={logo} alt='WatchStore' className='brand-logo' />
-          <span className='brand-text'>Pulse Watches</span>
-        </Link>
+    <AppBar position="sticky" color="default" elevation={2} sx={{ backdropFilter: 'blur(10px)', bgcolor: 'rgba(15, 23, 32, 0.95)' }}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters sx={{ justifyContent: 'space-between', py: 1.5 }}>
+          {/* Logo */}
+          <Button component={Link} to="/" color="inherit" sx={{ gap: 1.5, minWidth: 'auto' }}>
+            <Box component="img" src={logo} alt="Pulse Watches" sx={{ width: 45, height: 45, borderRadius: 2 }} />
+            <Typography variant="h6" fontWeight={800} sx={{ display: { xs: 'none', sm: 'block' } }}>Pulse Watches</Typography>
+          </Button>
 
-        <nav className='nav-links'>
-          <Link to='/'>Featured</Link>
-          <Link to='/?section=men'>Men's</Link>
-          <Link to='/?section=women'>Women's</Link>
-          <Link to='/?section=new'>New Arrivals</Link>
-          <Link to='/cart'>Cart</Link>
-        </nav>
+          {/* Search Bar */}
+          <Box sx={{ flex: 1, maxWidth: 500, mx: 3, display: { xs: 'none', lg: 'block' } }}>
+            <TextField
+              size="small"
+              fullWidth
+              placeholder="Search watches..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') navigate(`/?q=${encodeURIComponent(q)}`)
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                }
+              }}
+            />
+          </Box>
 
-        <div className='nav-actions'>
-          {user ? (
-            <>
-              <span className='nav-user'>Hi, {user.name}</span>
-              <button onClick={handleLogout} className='btn-logout'>Logout</button>
-            </>
-          ) : (
-            <>
-              <Link to='/login' className='nav-link'>Login</Link>
-              <Link to='/register' className='nav-link'>Register</Link>
-            </>
-          )}
-        </div>
-      </div>
-    </header>
+          {/* Navigation Links */}
+          <Stack direction="row" spacing={1} sx={{ display: { xs: 'none', md: 'flex' }, flex: 1, justifyContent: 'center' }}>
+            <Button component={Link} to="/" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Featured</Button>
+            <Button component={Link} to="/?section=men" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Men's</Button>
+            <Button component={Link} to="/?section=women" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Women's</Button>
+            <Button component={Link} to="/?section=new" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>New</Button>
+            <Button component={Link} to="/cart" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Cart</Button>
+            <Button component={Link} to="/about" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>About</Button>
+            <Button component={Link} to="/contact" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Contact</Button>
+          </Stack>
+
+          {/* User Actions */}
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 'auto' }}>
+            {user ? (
+              <>
+                <Typography variant="body2" sx={{ display: { xs: 'none', lg: 'inline-flex' }, mr: 1 }}>Hi, {user.name}</Typography>
+                <Button variant="contained" color="primary" size="small" onClick={handleLogout}>Logout</Button>
+              </>
+            ) : (
+              <>
+                <Button component={Link} to="/login" color="inherit" size="small">Login</Button>
+                <Button component={Link} to="/register" variant="contained" color="primary" size="small">Register</Button>
+              </>
+            )}
+          </Stack>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }

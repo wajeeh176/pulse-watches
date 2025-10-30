@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext'; // Assuming you have AuthContext
+import { useAuth } from '../context/AuthContext';
 import API from '../api/api';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import { toast } from 'react-toastify';
 
 export default function Checkout() {
   const { state, dispatch } = useCart();
   const { cartItems } = state;
-  const { user, token } = useAuth(); // get logged-in user and token
+  const { user, token } = useAuth();
 
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -17,120 +25,72 @@ export default function Checkout() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!name || !email || !address) return toast.error('Please fill all fields');
+    if (!cartItems.length) return toast.error('Your cart is empty');
 
-    if (!name || !email || !address) {
-      alert('Please fill all fields');
-      return;
-    }
-
-    if (!cartItems.length) {
-      alert('Your cart is empty');
-      return;
-    }
-
-    // Prepare order in backend schema format
-    const orderItems = cartItems.map(item => ({
-      product: item._id,
-      qty: item.qty,
-      price: item.price,
-    }));
-
+    const orderItems = cartItems.map(item => ({ product: item._id, qty: item.qty, price: item.price }));
     const shippingAddress = { name, email, address };
 
     try {
-      await API.post('/orders', {
-        orderItems,
-        shippingAddress,
-        paymentMethod: 'Cash on Delivery',
-        totalPrice,
-      }, {
-        headers: { Authorization: `Bearer ${token}` }, // token required for protected route
-      });
-
+      await API.post('/orders', { orderItems, shippingAddress, paymentMethod: 'Cash on Delivery', totalPrice }, { headers: { Authorization: `Bearer ${token}` } });
       dispatch({ type: 'CLEAR_CART' });
       setSubmitted(true);
+      toast.success('Order placed successfully!');
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || 'Order could not be placed');
+      toast.error(err.response?.data?.message || 'Order could not be placed');
     }
   };
 
   if (submitted)
     return (
-      <div className="checkout-message">
-        <h1>🎉 Thank You!</h1>
-        <p>Your order has been placed successfully.</p>
-      </div>
+      <Container maxWidth="lg" sx={{ py: 10, textAlign: 'center' }}>
+        <Typography variant="h3" gutterBottom>🎉 Thank You!</Typography>
+        <Typography variant="h6" color="text.secondary">Your order has been placed successfully.</Typography>
+      </Container>
     );
 
   if (!cartItems.length)
     return (
-      <div className="checkout-message">
-        <h1>🛒 Your cart is empty</h1>
-        <p>Add some products to proceed to checkout.</p>
-      </div>
+      <Container maxWidth="lg" sx={{ py: 10, textAlign: 'center' }}>
+        <Typography variant="h3" gutterBottom>🛒 Your cart is empty</Typography>
+        <Typography variant="h6" color="text.secondary">Add some products to proceed to checkout.</Typography>
+      </Container>
     );
 
   return (
-    <div className="checkout-container">
-      <h1 className="checkout-title">Checkout</h1>
-      <div className="checkout-grid">
-        {/* Shipping Form */}
-        <div className="checkout-card">
-          <h2>Shipping Information</h2>
-          <form onSubmit={handleSubmit} className="checkout-form">
-            <div className="form-group">
-              <label>Name</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Address</label>
-              <textarea
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="123 Street, City, Country"
-                required
-              ></textarea>
-            </div>
-            <button type="submit" className="btn-submit">
-              Place Order
-            </button>
-          </form>
-        </div>
-
-        {/* Order Summary */}
-        <div className="checkout-card checkout-summary">
-          <h2>Order Summary</h2>
-          <ul className="summary-list">
-            {cartItems.map((item) => (
-              <li key={item._id} className="summary-item">
-                <img src={`/images/${item.images?.[0]}`} alt={item.title} />
-                <div className="summary-details">
-                  <span>{item.title} x {item.qty}</span>
-                  <span>Rs. {item.price * item.qty}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <div className="summary-total">Total: Rs. {totalPrice}</div>
-        </div>
-      </div>
-    </div>
+    <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Typography variant="h4" fontWeight={800} align="center" gutterBottom>Checkout</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>Shipping Information</Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+              <TextField label="Name" value={name} onChange={e => setName(e.target.value)} fullWidth required sx={{ mb: 2 }} />
+              <TextField type="email" label="Email" value={email} onChange={e => setEmail(e.target.value)} fullWidth required sx={{ mb: 2 }} />
+              <TextField label="Address" value={address} onChange={e => setAddress(e.target.value)} fullWidth required multiline minRows={3} sx={{ mb: 2 }} />
+              <Button type="submit" variant="contained" color="primary" fullWidth>Place Order</Button>
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>Order Summary</Typography>
+            <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+              {cartItems.map(item => (
+                <Box component="li" key={item._id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
+                    <Box component="img" src={`/images/${item.images?.[0]}`} alt={item.title} sx={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 1 }} />
+                    <Typography variant="body2">{item.title} x {item.qty}</Typography>
+                  </Box>
+                  <Typography variant="body2" fontWeight={700}>Rs. {item.price * item.qty}</Typography>
+                </Box>
+              ))}
+            </Box>
+            <Typography variant="subtitle1" fontWeight={800} sx={{ mt: 2, textAlign: 'right' }}>Total: Rs. {totalPrice}</Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
