@@ -15,11 +15,13 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
         backgroundImage: "linear-gradient(135deg, rgba(14,14,16,0.85) 0%, rgba(14,14,16,0.70) 100%), url('/images/hero-bg.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         minHeight: { xs: '400px', md: '500px' },
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        textAlign: 'center'
+        textAlign: 'center',
+        willChange: 'auto'
       }}
     >
       <Container maxWidth="md">

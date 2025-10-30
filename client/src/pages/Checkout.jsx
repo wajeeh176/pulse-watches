@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import API from '../api/api';
+import SEO from '../components/SEO';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -44,22 +45,48 @@ export default function Checkout() {
 
   if (submitted)
     return (
-      <Container maxWidth="lg" sx={{ py: 10, textAlign: 'center' }}>
+      <>
+        <SEO 
+          title="Order Confirmed - Pulse Watches"
+          description="Your order has been placed successfully."
+          url="https://pulsewatches.pk/checkout"
+          noindex={true}
+          nofollow={true}
+        />
+        <Container maxWidth="lg" sx={{ py: 10, textAlign: 'center' }}>
         <Typography variant="h3" gutterBottom>🎉 Thank You!</Typography>
         <Typography variant="h6" color="text.secondary">Your order has been placed successfully.</Typography>
       </Container>
+      </>
     );
 
   if (!cartItems.length)
     return (
-      <Container maxWidth="lg" sx={{ py: 10, textAlign: 'center' }}>
+      <>
+        <SEO 
+          title="Checkout - Pulse Watches"
+          description="Complete your order."
+          url="https://pulsewatches.pk/checkout"
+          noindex={true}
+          nofollow={true}
+        />
+        <Container maxWidth="lg" sx={{ py: 10, textAlign: 'center' }}>
         <Typography variant="h3" gutterBottom>🛒 Your cart is empty</Typography>
         <Typography variant="h6" color="text.secondary">Add some products to proceed to checkout.</Typography>
       </Container>
+      </>
     );
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <>
+      <SEO 
+        title="Checkout - Pulse Watches"
+        description="Complete your order and shipping information."
+        url="https://pulsewatches.pk/checkout"
+        noindex={true}
+        nofollow={true}
+      />
+      <Container maxWidth="lg" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={800} align="center" gutterBottom>Checkout</Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
@@ -80,7 +107,24 @@ export default function Checkout() {
               {cartItems.map(item => (
                 <Box component="li" key={item._id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
-                    <Box component="img" src={`/images/${item.images?.[0]}`} alt={item.title} sx={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 1 }} />
+                    <Box 
+                      component="img" 
+                      src={`/images/${item.images?.[0]}`} 
+                      alt={item.title} 
+                      loading="lazy" 
+                      decoding="async"
+                      width="56"
+                      height="56"
+                      sx={{ 
+                        width: 56, 
+                        height: 56,
+                        aspectRatio: '1/1',
+                        objectFit: 'cover', 
+                        borderRadius: 1,
+                        display: 'block',
+                        flexShrink: 0
+                      }} 
+                    />
                     <Typography variant="body2">{item.title} x {item.qty}</Typography>
                   </Box>
                   <Typography variant="body2" fontWeight={700}>Rs. {item.price * item.qty}</Typography>
@@ -92,5 +136,6 @@ export default function Checkout() {
         </Grid>
       </Grid>
     </Container>
+    </>
   );
 }

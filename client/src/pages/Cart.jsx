@@ -1,6 +1,7 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
 import { Link as RouterLink } from "react-router-dom";
+import SEO from "../components/SEO";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -16,7 +17,15 @@ export default function Cart() {
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <>
+      <SEO 
+        title="Shopping Cart - Pulse Watches"
+        description="Review your shopping cart items before checkout."
+        url="https://pulsewatches.pk/cart"
+        noindex={true}
+        nofollow={true}
+      />
+      <Container maxWidth="lg" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={800} align="center" gutterBottom>Shopping Cart</Typography>
       {cartItems.length === 0 ? (
         <Typography align="center">Your cart is empty. <Button component={RouterLink} to="/" variant="text">Go Shopping</Button></Typography>
@@ -27,7 +36,24 @@ export default function Cart() {
               {cartItems.map(item => (
                 <Grid item xs={12} key={item._id}>
                   <Paper sx={{ p: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Box component="img" src={`/images/${item.images?.[0]}`} alt={item.title} sx={{ width: 120, height: 120, objectFit: 'contain', borderRadius: 1 }} />
+                    <Box 
+                      component="img" 
+                      src={`/images/${item.images?.[0]}`} 
+                      alt={item.title} 
+                      loading="lazy" 
+                      decoding="async"
+                      width="120"
+                      height="120"
+                      sx={{ 
+                        width: 120, 
+                        height: 120, 
+                        aspectRatio: '1/1',
+                        objectFit: 'contain', 
+                        borderRadius: 1,
+                        display: 'block',
+                        flexShrink: 0
+                      }} 
+                    />
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="subtitle1" fontWeight={700}>{item.title}</Typography>
                       <Typography variant="body2" color="text.secondary">Rs. {item.price}</Typography>
@@ -61,5 +87,6 @@ export default function Cart() {
         </Grid>
       )}
     </Container>
+    </>
   );
 }

@@ -13,6 +13,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { toast } from 'react-toastify';
+import SEO from '../components/SEO';
 
 export default function Contact(){
   const [name, setName] = useState('');
@@ -92,6 +93,12 @@ export default function Contact(){
 
   return (
     <Box>
+      <SEO 
+        title="Contact Us - Pulse Watches"
+        description="Get in touch with Pulse Watches. Contact our customer service team for inquiries about luxury watches, orders, or any questions. We're here to help 24/7."
+        keywords="contact pulse watches, watch store contact, luxury watches inquiry, customer service pakistan, watch questions"
+        url="https://pulsewatches.pk/contact"
+      />
       {/* Hero Section */}
       <Box sx={{ 
         bgcolor: 'background.paper', 
@@ -123,11 +130,18 @@ export default function Contact(){
                   height: '100%',
                   border: 1,
                   borderColor: 'divider',
-                  transition: 'all 0.3s',
+                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease',
+                  willChange: 'transform, box-shadow',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
                   '&:hover': {
-                    transform: 'translateY(-8px)',
+                    transform: 'translateY(-8px) translateZ(0)',
                     boxShadow: 4,
-                    borderColor: 'primary.main'
+                    borderColor: 'primary.main',
+                    willChange: 'transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
                   }
                 }}
               >

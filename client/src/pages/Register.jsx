@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/api';
+import SEO from '../components/SEO';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -29,7 +30,15 @@ export default function Register() {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ py: 8 }}>
+    <>
+      <SEO 
+        title="Register - Pulse Watches"
+        description="Create a new account with Pulse Watches to start shopping for luxury timepieces."
+        url="https://pulsewatches.pk/register"
+        noindex={true}
+        nofollow={true}
+      />
+      <Container maxWidth="xs" sx={{ py: 8 }}>
       <Paper sx={{ p: 4 }}>
         <Typography variant="h5" fontWeight={800} align="center" gutterBottom>Register</Typography>
         <Box component="form" onSubmit={handleSubmit}>
@@ -40,5 +49,6 @@ export default function Register() {
         </Box>
       </Paper>
     </Container>
+    </>
   );
 }

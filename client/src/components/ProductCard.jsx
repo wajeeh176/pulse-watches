@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -8,25 +8,33 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
-export default function ProductCard({ product }) {
+const ProductCard = memo(function ProductCard({ product }) {
   const imageUrl = `images/${product.images?.[0] || "placeholder.png"}`;
   const inStock = product.countInStock > 0;
 
+  // Prevent unnecessary re-renders by checking if props changed
   return (
     <Card 
       variant="outlined" 
       sx={{ 
         height: '100%', 
         backgroundImage: theme => `linear-gradient(180deg, ${theme.palette.action.hover}, transparent)`,
-        transition: 'all 0.3s ease',
+        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        willChange: 'transform, box-shadow',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
         '&:hover': {
-          transform: 'translateY(-8px)',
-          boxShadow: 4
+          transform: 'translateY(-8px) translateZ(0)',
+          boxShadow: 4,
+          willChange: 'transform'
+        },
+        '&:not(:hover)': {
+          willChange: 'auto'
         }
       }}
     >
       <CardActionArea component={RouterLink} to={`/product/${product.slug}`} sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start' }}>
-        <Box sx={{ position: 'relative', width: '100%' }}>
+        <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/3', minHeight: 220 }}>
           {!inStock && (
             <Chip 
               label="Out of Stock" 
@@ -39,11 +47,18 @@ export default function ProductCard({ product }) {
             component="img" 
             image={imageUrl} 
             alt={product.title} 
+            loading="lazy"
+            decoding="async"
+            width="300"
+            height="220"
             sx={{ 
-              height: 220, 
+              height: 220,
+              width: '100%',
+              aspectRatio: '4/3',
               objectFit: 'contain', 
               p: 2,
-              bgcolor: 'rgba(255,255,255,0.01)'
+              bgcolor: 'rgba(255,255,255,0.01)',
+              display: 'block'
             }} 
           />
         </Box>
@@ -65,4 +80,6 @@ export default function ProductCard({ product }) {
       </CardActionArea>
     </Card>
   );
-}
+});
+
+export default ProductCard;

@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import API from '../api/api';
+import SEO from '../components/SEO';
 
 export default function Orders(){
   const [orders, setOrders] = useState([]);
@@ -19,7 +20,15 @@ export default function Orders(){
   },[])
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <>
+      <SEO 
+        title="My Orders - Pulse Watches"
+        description="View your order history and track your purchases."
+        url="https://pulsewatches.pk/orders"
+        noindex={true}
+        nofollow={true}
+      />
+      <Container maxWidth="lg" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={800} gutterBottom>My Orders</Typography>
       {loading ? 'Loading...' : (
         <Grid container spacing={2}>
@@ -42,6 +51,7 @@ export default function Orders(){
         </Grid>
       )}
     </Container>
+    </>
   )
 }
 

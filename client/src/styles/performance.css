@@ -1,0 +1,285 @@
+/* Performance Optimizations */
+
+/* Prevent layout shifts */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Font loading optimization - prevent text reflow */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap; /* Show fallback immediately, swap when font loads */
+}
+
+/* Prevent layout shifts during font load */
+body {
+  font-display: swap;
+}
+
+/* Reserve space for loading states */
+.loading-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prevent layout shift from product grid */
+.product-grid-container {
+  min-height: 500px;
+}
+
+/* Prevent navbar shift */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transform: translateZ(0); /* Create compositing layer */
+  will-change: scroll-position;
+}
+
+/* Reserve space for dynamic content */
+.product-list-container {
+  min-height: 600px;
+}
+
+/* Skeleton loader to prevent shift */
+.skeleton {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0.05) 25%, 
+    rgba(255,255,255,0.1) 50%, 
+    rgba(255,255,255,0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Prevent toast container from causing shifts */
+.Toastify__toast-container {
+  position: fixed !important;
+  pointer-events: none;
+}
+
+.Toastify__toast {
+  pointer-events: auto;
+}
+
+/* Reserve space for text content */
+.typography-reserve {
+  min-height: 1.5em;
+  line-height: 1.5;
+}
+
+/* Prevent shift from tab switching */
+.MuiTabs-root {
+  min-height: 48px;
+}
+
+/* Optimize rendering */
+.card-image-container {
+  contain: layout style paint;
+}
+
+/* Improve scroll performance */
+.product-grid {
+  contain: layout;
+}
+
+/* Reduce repaints */
+.optimized-image {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Prevent layout shift from buttons */
+button, .MuiButton-root {
+  min-height: 36px;
+  contain: layout;
+}
+
+/* Prevent shift from chips/badges */
+.MuiChip-root {
+  min-height: 24px;
+  min-width: 60px;
+}
+
+/* Prevent grid shift */
+.MuiGrid-container {
+  contain: layout;
+}
+
+/* Prevent container shift */
+.MuiContainer-root {
+  contain: layout;
+}
+
+/* ============================================
+   FORCED REFLOW OPTIMIZATIONS
+   ============================================ */
+
+/* Optimize transitions - only animate transform and opacity (no layout) */
+.optimized-transition,
+.MuiCard-root,
+.MuiPaper-root {
+  will-change: transform, opacity;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Prevent reflows from hover animations */
+.optimized-transition:hover,
+.MuiCard-root:hover,
+.MuiPaper-root:hover {
+  will-change: transform;
+}
+
+/* After animation completes, remove will-change */
+.optimized-transition:not(:hover),
+.MuiCard-root:not(:hover),
+.MuiPaper-root:not(:hover) {
+  will-change: auto;
+}
+
+/* Use transform instead of position changes */
+.animate-transform {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Batch DOM updates - use transform for layout changes */
+.use-transform {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Optimize Material-UI components */
+.MuiButton-root {
+  will-change: transform, background-color;
+  transition: transform 0.2s ease, background-color 0.2s ease !important;
+}
+
+.MuiButton-root:hover {
+  transform: translateY(-1px);
+}
+
+.MuiButton-root:active {
+  transform: translateY(0);
+}
+
+/* Prevent reflow from grid calculations */
+.MuiGrid-item {
+  contain: layout style;
+}
+
+/* Optimize cards with GPU acceleration */
+.MuiCard-root {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimize product cards specifically */
+.product-card-optimized {
+  will-change: transform, box-shadow;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.product-card-optimized:hover {
+  transform: translateY(-8px) translateZ(0);
+}
+
+/* Prevent reflow from image loading */
+img {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 220px;
+}
+
+/* Optimize scroll performance */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent forced reflow from scroll */
+* {
+  scroll-behavior: auto; /* Let browser handle smooth scrolling */
+}
+
+/* Use content-visibility for large lists */
+.product-list-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 300px;
+}
+
+/* Prevent forced reflow from style recalculations */
+.optimize-rendering {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+/* Batch layout reads - use requestAnimationFrame pattern */
+.defer-layout {
+  transform: translateZ(0);
+}
+
+/* Optimize animations - use transform and opacity only */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-inAfter {
+  will-change: auto;
+}
+
+/* Prevent layout thrashing */
+.no-reflow {
+  position: relative;
+  transform: translateZ(0);
+}
+
+/* Optimize Material-UI transitions */
+.MuiCollapse-root {
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+              opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+}
+
+/* Force GPU acceleration for animations */
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Optimize hover states */
+.hover-optimized {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: transform, box-shadow;
+}
+
+.hover-optimized:hover {
+  transform: translateY(-4px) translateZ(0);
+}
+
+.hover-optimized:not(:hover) {
+  will-change: auto;
+}

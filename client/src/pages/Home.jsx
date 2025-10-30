@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useMemo, useCallback} from 'react'
 import API from '../api/api'
+import axios from 'axios'
 import Hero from '../components/Hero'
 import ProductCard from '../components/ProductCard'
+import SEO from '../components/SEO'
 import { useLocation, Link as RouterLink } from 'react-router-dom'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
@@ -30,27 +32,40 @@ export default function Home(){
 
   useEffect(() => {
     setLoading(true);
-    API.get("/products")
+    
+    // Add cache control headers
+    const controller = new AbortController();
+    const signal = controller.signal;
+    
+    API.get("/products", { signal })
       .then((res) => {
         setProducts(res.data || []);
       })
-      .catch((e) => console.error(e))
+      .catch((e) => {
+        if (!axios.isCancel(e)) {
+          console.error(e);
+        }
+      })
       .finally(() => setLoading(false));
+      
+    return () => controller.abort();
   }, []);
 
-  const filterBy = (cat) => {
+  // Memoize the filtering function to avoid unnecessary recalculations
+  const filterBy = useCallback((cat, products, searchQuery, sortOrder) => {
     let base = products
     if (cat === 'featured') base = products.slice(0, 12)
     if (cat === 'men') base = products.filter(p => (p.category || '').toLowerCase().includes('men'))
     if (cat === 'women') base = products.filter(p => (p.category || '').toLowerCase().includes('women'))
     if (cat === 'new') base = products.slice(0, 12).reverse()
-    if (searchQ) base = base.filter(p => `${p.title} ${p.description}`.toLowerCase().includes(searchQ))
-    if (sort === 'price-asc') base = [...base].sort((a,b)=>a.price-b.price)
-    if (sort === 'price-desc') base = [...base].sort((a,b)=>b.price-a.price)
+    if (searchQuery) base = base.filter(p => `${p.title} ${p.description || ''}`.toLowerCase().includes(searchQuery))
+    if (sortOrder === 'price-asc') base = [...base].sort((a,b)=>a.price-b.price)
+    if (sortOrder === 'price-desc') base = [...base].sort((a,b)=>b.price-a.price)
     return base
-  }
+  }, [])
 
-  const list = filterBy(section)
+  // Memoize the filtered list to prevent recalculation on every render
+  const list = useMemo(() => filterBy(section, products, searchQ, sort), [section, products, searchQ, sort, filterBy])
   const title = section === 'featured' ? 'Featured Watches' : section === 'men' ? "Men's Collection" : section === 'women' ? "Women's Collection" : 'New Arrivals'
 
   const categories = [
@@ -62,6 +77,12 @@ export default function Home(){
 
   return (
     <div>
+      <SEO 
+        title="Pulse Watches - Premium Luxury Watches in Pakistan"
+        description="Discover authentic luxury timepieces from world-renowned brands at Pulse Watches. Browse our collection of premium watches including Rolex, Patek Philippe, Tissot, and Citizen. Fast delivery across Pakistan with 100% authentic guarantee."
+        keywords="luxury watches, premium watches, rolex, patek philippe, tissot, citizen, watches pakistan, authentic watches, men watches, women watches, buy watches online"
+        url="https://pulsewatches.pk/"
+      />
       <Hero title='Discover Premium Watches' subtitle='Authentic timepieces from world-renowned brands • Fast delivery across Pakistan' />
       
       {/* Featured Categories */}
@@ -79,19 +100,36 @@ export default function Home(){
                 sx={{ 
                   textDecoration: 'none',
                   height: '100%',
-                  transition: 'all 0.3s',
+                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  willChange: 'transform, box-shadow',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
                   '&:hover': { 
-                    transform: 'translateY(-8px)',
-                    boxShadow: 6
+                    transform: 'translateY(-8px) translateZ(0)',
+                    boxShadow: 6,
+                    willChange: 'transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
                   }
                 }}
               >
                 <CardMedia
                   component="img"
-                  height="200"
                   image={cat.img}
                   alt={cat.name}
-                  sx={{ objectFit: 'contain', p: 2, bgcolor: 'rgba(255,255,255,0.02)' }}
+                  loading="lazy"
+                  width="400"
+                  height="200"
+                  sx={{ 
+                    height: 200,
+                    width: '100%',
+                    aspectRatio: '2/1',
+                    objectFit: 'contain', 
+                    p: 2, 
+                    bgcolor: 'rgba(255,255,255,0.02)',
+                    display: 'block'
+                  }}
                 />
                 <CardContent>
                   <Typography variant="subtitle1" fontWeight={700} align="center">
@@ -150,22 +188,30 @@ export default function Home(){
           </Tabs>
         </Box>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            minHeight: '600px',
+            py: 6 
+          }}>
             <CircularProgress />
           </Box>
         ) : (
-          <Grid container spacing={3}>
-            {list.map(p=> (
-              <Grid item key={p._id} xs={12} sm={6} md={4} lg={3}>
-                <ProductCard product={p} />
-              </Grid>
-            ))}
-            {list.length === 0 && (
-              <Grid item xs={12}>
-                <Typography align="center" sx={{ py: 4 }}>No products in this section.</Typography>
-              </Grid>
-            )}
-          </Grid>
+          <Box sx={{ minHeight: '600px' }}>
+            <Grid container spacing={3}>
+              {list.map(p=> (
+                <Grid item key={p._id} xs={12} sm={6} md={4} lg={3}>
+                  <ProductCard product={p} />
+                </Grid>
+              ))}
+              {list.length === 0 && (
+                <Grid item xs={12}>
+                  <Typography align="center" sx={{ py: 4, minHeight: '200px' }}>No products in this section.</Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
         )}
       </Container>
 

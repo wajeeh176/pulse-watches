@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/api';
+import SEO from '../components/SEO';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -31,7 +32,15 @@ export default function Login() {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ py: 8 }}>
+    <>
+      <SEO 
+        title="Login - Pulse Watches"
+        description="Login to your Pulse Watches account to access exclusive features and manage your orders."
+        url="https://pulsewatches.pk/login"
+        noindex={true}
+        nofollow={true}
+      />
+      <Container maxWidth="xs" sx={{ py: 8 }}>
       <Paper sx={{ p: 4 }}>
         <Typography variant="h5" fontWeight={800} align="center" gutterBottom>Login</Typography>
         <Box component="form" onSubmit={handleSubmit}>
@@ -41,5 +50,6 @@ export default function Login() {
         </Box>
       </Paper>
     </Container>
+    </>
   );
 }

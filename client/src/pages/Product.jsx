@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import API from '../api/api';
+import SEO from '../components/SEO';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import { toast } from 'react-toastify';
 
 export default function Product() {
@@ -29,13 +31,34 @@ export default function Product() {
       .finally(() => setLoading(false));
   }, [slug]);
 
-  if (loading) return <Container maxWidth="lg" sx={{ py: 6 }}>Loading...</Container>;
-  if (!product) return <Container maxWidth="lg" sx={{ py: 6 }}>Product not found</Container>;
+  if (loading) return (
+    <Container maxWidth="lg" sx={{ py: 6, minHeight: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <CircularProgress />
+    </Container>
+  );
+  if (!product) return (
+    <Container maxWidth="lg" sx={{ py: 6, minHeight: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Typography variant="h6">Product not found</Typography>
+    </Container>
+  );
 
   const inStock = product.countInStock > 0
+  const productUrl = `https://pulsewatches.pk/product/${product.slug}`;
+  const productImage = product.images?.[0] 
+    ? `https://pulsewatches.pk/images/${product.images[0]}` 
+    : 'https://pulsewatches.pk/images/hero-bg.jpg';
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <>
+      <SEO 
+        title={`${product.title} - Pulse Watches`}
+        description={product.description || `Buy ${product.title} at Pulse Watches. Authentic luxury watch with fast delivery across Pakistan.`}
+        keywords={`${product.title}, ${product.brand || ''}, luxury watch, authentic watch, ${product.category || ''}, watches pakistan`}
+        image={productImage}
+        url={productUrl}
+        type="product"
+      />
+      <Container maxWidth="lg" sx={{ py: 6 }}>
       <Grid container spacing={4} alignItems="flex-start">
         <Grid item xs={12} md={6}>
           <Box sx={{ p: 2, borderRadius: 2, border: theme => `1px solid ${theme.palette.divider}` }}>
@@ -43,7 +66,18 @@ export default function Product() {
               component="img"
               src={`/images/${product.images?.[0] || 'product1.png'}`}
               alt={product.title}
-              sx={{ width: '100%', maxHeight: 520, objectFit: 'contain', borderRadius: 1 }}
+              loading="lazy"
+              decoding="async"
+              width="800"
+              height="520"
+              sx={{ 
+                width: '100%', 
+                maxHeight: 520,
+                aspectRatio: '3/4',
+                objectFit: 'contain', 
+                borderRadius: 1,
+                display: 'block'
+              }}
             />
           </Box>
         </Grid>
@@ -77,5 +111,6 @@ export default function Product() {
         </Grid>
       </Grid>
     </Container>
+    </>
   );
 }

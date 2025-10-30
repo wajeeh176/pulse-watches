@@ -8,6 +8,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import SEO from '../components/SEO';
 
 export default function About(){
   const features = [
@@ -35,6 +36,12 @@ export default function About(){
 
   return (
     <Box>
+      <SEO 
+        title="About Us - Pulse Watches"
+        description="Learn about Pulse Watches, Pakistan's premier destination for authentic luxury timepieces. We offer 100% authentic watches with fast delivery and exceptional customer service."
+        keywords="about pulse watches, luxury watches pakistan, authentic watches, watch store pakistan, premium watches"
+        url="https://pulsewatches.pk/about"
+      />
       {/* Hero Section */}
       <Box sx={{ 
         bgcolor: 'background.paper', 
@@ -82,12 +89,19 @@ export default function About(){
               <Box
                 component="img"
                 src="/images/rolex.png"
-                alt="Luxury Watch"
+                alt="Luxury Watch Collection"
+                loading="lazy"
+                decoding="async"
+                width="600"
+                height="400"
                 sx={{ 
                   width: '80%', 
                   height: 'auto',
+                  maxHeight: 400,
+                  aspectRatio: '3/2',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))'
+                  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))',
+                  display: 'block'
                 }}
               />
             </Box>
@@ -112,11 +126,18 @@ export default function About(){
                     textAlign: 'center',
                     border: 1,
                     borderColor: 'divider',
-                    transition: 'all 0.3s',
+                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease',
+                    willChange: 'transform, box-shadow',
+                    transform: 'translateZ(0)',
+                    backfaceVisibility: 'hidden',
                     '&:hover': {
-                      transform: 'translateY(-8px)',
+                      transform: 'translateY(-8px) translateZ(0)',
                       boxShadow: 4,
-                      borderColor: 'primary.main'
+                      borderColor: 'primary.main',
+                      willChange: 'transform'
+                    },
+                    '&:not(:hover)': {
+                      willChange: 'auto'
                     }
                   }}
                 >

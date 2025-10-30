@@ -115,7 +115,16 @@ export default function Footer() {
                     size="small" 
                     sx={{ 
                       bgcolor: 'background.default',
-                      '&:hover': { bgcolor: 'primary.main', color: 'black' }
+                      transition: 'background-color 0.2s ease, color 0.2s ease',
+                      willChange: 'background-color',
+                      '&:hover': { 
+                        bgcolor: 'primary.main', 
+                        color: 'black',
+                        willChange: 'background-color, color'
+                      },
+                      '&:not(:hover)': {
+                        willChange: 'auto'
+                      }
                     }}
                   >
                     <FacebookIcon />
@@ -124,7 +133,16 @@ export default function Footer() {
                     size="small" 
                     sx={{ 
                       bgcolor: 'background.default',
-                      '&:hover': { bgcolor: 'primary.main', color: 'black' }
+                      transition: 'background-color 0.2s ease, color 0.2s ease',
+                      willChange: 'background-color',
+                      '&:hover': { 
+                        bgcolor: 'primary.main', 
+                        color: 'black',
+                        willChange: 'background-color, color'
+                      },
+                      '&:not(:hover)': {
+                        willChange: 'auto'
+                      }
                     }}
                   >
                     <InstagramIcon />
@@ -133,7 +151,16 @@ export default function Footer() {
                     size="small" 
                     sx={{ 
                       bgcolor: 'background.default',
-                      '&:hover': { bgcolor: 'primary.main', color: 'black' }
+                      transition: 'background-color 0.2s ease, color 0.2s ease',
+                      willChange: 'background-color',
+                      '&:hover': { 
+                        bgcolor: 'primary.main', 
+                        color: 'black',
+                        willChange: 'background-color, color'
+                      },
+                      '&:not(:hover)': {
+                        willChange: 'auto'
+                      }
                     }}
                   >
                     <TwitterIcon />
@@ -142,7 +169,16 @@ export default function Footer() {
                     size="small" 
                     sx={{ 
                       bgcolor: 'background.default',
-                      '&:hover': { bgcolor: 'primary.main', color: 'black' }
+                      transition: 'background-color 0.2s ease, color 0.2s ease',
+                      willChange: 'background-color',
+                      '&:hover': { 
+                        bgcolor: 'primary.main', 
+                        color: 'black',
+                        willChange: 'background-color, color'
+                      },
+                      '&:not(:hover)': {
+                        willChange: 'auto'
+                      }
                     }}
                   >
                     <YouTubeIcon />
@@ -164,8 +200,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Men's Watches
@@ -176,8 +220,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Women's Watches
@@ -188,8 +240,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 New Arrivals
@@ -200,8 +260,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Featured
@@ -221,8 +289,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Contact Us
@@ -233,8 +309,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 About Us
@@ -287,8 +371,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Login
@@ -299,8 +391,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Register
@@ -311,8 +411,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 My Orders
@@ -323,8 +431,16 @@ export default function Footer() {
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
-                  transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 }
+                  transition: 'color 0.2s ease, transform 0.2s ease',
+                  willChange: 'color',
+                  '&:hover': { 
+                    color: 'primary.main',
+                    transform: 'translateX(4px)',
+                    willChange: 'color, transform'
+                  },
+                  '&:not(:hover)': {
+                    willChange: 'auto'
+                  }
                 }}
               >
                 Shopping Cart

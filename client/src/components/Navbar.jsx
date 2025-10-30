@@ -25,12 +25,35 @@ export default function Navbar() {
   };
 
   return (
-    <AppBar position="sticky" color="default" elevation={2} sx={{ backdropFilter: 'blur(10px)', bgcolor: 'rgba(15, 23, 32, 0.95)' }}>
+    <AppBar 
+      position="sticky" 
+      color="default" 
+      elevation={2} 
+      sx={{ 
+        backdropFilter: 'blur(10px)', 
+        bgcolor: 'rgba(15, 23, 32, 0.95)',
+        transform: 'translateZ(0)',
+        willChange: 'scroll-position'
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between', py: 1.5 }}>
           {/* Logo */}
           <Button component={Link} to="/" color="inherit" sx={{ gap: 1.5, minWidth: 'auto' }}>
-            <Box component="img" src={logo} alt="Pulse Watches" sx={{ width: 45, height: 45, borderRadius: 2 }} />
+            <Box 
+              component="img" 
+              src={logo} 
+              alt="Pulse Watches" 
+              width="45"
+              height="45"
+              sx={{ 
+                width: 45, 
+                height: 45, 
+                borderRadius: 2,
+                display: 'block',
+                flexShrink: 0
+              }} 
+            />
             <Typography variant="h6" fontWeight={800} sx={{ display: { xs: 'none', sm: 'block' } }}>Pulse Watches</Typography>
           </Button>
 

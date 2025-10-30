@@ -1,14 +1,18 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext'; // <- import AuthProvider
+import { AuthProvider } from './context/AuthContext';
 import './styles/index.css';
+import './styles/performance.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import LazyToastContainer from './components/LazyToastContainer';
+
+// Lazy load toast styles to reduce initial bundle
+// Will be loaded when LazyToastContainer is imported
 
 const theme = createTheme({
   palette: {
@@ -24,29 +28,32 @@ const theme = createTheme({
   },
 });
 
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <App />
-            <ToastContainer
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-          </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </React.StrictMode>
-);
+// Defer non-critical initialization
+document.addEventListener('DOMContentLoaded', () => {
+  createRoot(document.getElementById('root')).render(
+    <HelmetProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AuthProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <App />
+              <LazyToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+            </BrowserRouter>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </HelmetProvider>
+  );
+});
