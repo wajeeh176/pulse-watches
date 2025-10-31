@@ -13,24 +13,8 @@ dotenv.config();
 const app = express();
 
 // CORS configuration - MUST come before routes
-// Support both local development and Vercel deployment
-const allowedOrigins = process.env.CLIENT_URL 
-  ? process.env.CLIENT_URL.split(',')
-  : process.env.VERCEL_URL
-  ? [`https://${process.env.VERCEL_URL}`, `https://www.${process.env.VERCEL_URL}`, 'http://localhost:5173']
-  : ['http://localhost:5173', '*'];
-
 app.use(cors({ 
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, true); // Allow all for now, can restrict later
-    }
-  },
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
