@@ -2,11 +2,22 @@
 import React, { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// Defer CSS - Load after initial render to reduce chain blocking
-// This prevents CSS from blocking the JavaScript execution chain
+// Defer CSS - Load after LCP to reduce blocking
+// CSS is loaded after the LCP image has rendered
 const loadCSS = () => {
-  import('./styles/index.css');
-  import('./styles/performance.css');
+  // Wait for LCP (typically hero image) before loading CSS
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      import('./styles/index.css');
+      import('./styles/performance.css');
+    }, { timeout: 500 });
+  } else {
+    // Fallback: Load after a short delay
+    setTimeout(() => {
+      import('./styles/index.css');
+      import('./styles/performance.css');
+    }, 100);
+  }
 };
 
 // Defer heavy imports - Load in parallel, not sequentially
@@ -69,35 +80,71 @@ const AppWrapper = () => {
   const [app, setApp] = React.useState(null);
 
   React.useEffect(() => {
-    // Load CSS immediately but asynchronously (doesn't block)
+    // Load CSS after LCP - defer to ensure image gets priority
     loadCSS();
 
     // Load heavy dependencies in PARALLEL (not sequential chain)
-    // This reduces chain length significantly
-    loadHeavyDeps.then(loadedDeps => {
-      setDeps(loadedDeps);
-      
-      // Create theme after dependencies load (reduces work)
-      const themeValue = loadedDeps.createTheme({
-        palette: {
-          mode: 'dark',
-          primary: { main: '#c4975b' },
-          background: {
-            default: '#0e0e10',
-            paper: '#0f1720',
-          },
-        },
-        typography: {
-          fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
-        },
-      });
-      setTheme(themeValue);
-    });
+    // Defer until after initial paint to not block LCP
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        loadHeavyDeps.then(loadedDeps => {
+          setDeps(loadedDeps);
+          
+          // Create theme after dependencies load (reduces work)
+          const themeValue = loadedDeps.createTheme({
+            palette: {
+              mode: 'dark',
+              primary: { main: '#c4975b' },
+              background: {
+                default: '#0e0e10',
+                paper: '#0f1720',
+              },
+            },
+            typography: {
+              fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
+            },
+          });
+          setTheme(themeValue);
+        });
+      }, { timeout: 300 });
+    } else {
+      setTimeout(() => {
+        loadHeavyDeps.then(loadedDeps => {
+          setDeps(loadedDeps);
+          
+          // Create theme after dependencies load (reduces work)
+          const themeValue = loadedDeps.createTheme({
+            palette: {
+              mode: 'dark',
+              primary: { main: '#c4975b' },
+              background: {
+                default: '#0e0e10',
+                paper: '#0f1720',
+              },
+            },
+            typography: {
+              fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
+            },
+          });
+          setTheme(themeValue);
+        });
+      }, 50);
+    }
 
-    // Load App component in parallel (doesn't wait for deps)
-    AppPromise.then(module => {
-      setApp(() => module.default);
-    });
+    // Load App component in parallel but defer slightly to prioritize LCP image
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        AppPromise.then(module => {
+          setApp(() => module.default);
+        });
+      }, { timeout: 200 });
+    } else {
+      setTimeout(() => {
+        AppPromise.then(module => {
+          setApp(() => module.default);
+        });
+      }, 50);
+    }
   }, []);
 
   // Render immediately with minimal JS execution

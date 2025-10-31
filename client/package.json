@@ -3,6 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "sideEffects": [
+    "*.css",
+    "*.scss",
+    "./src/styles/**/*",
+    "./src/main.jsx"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

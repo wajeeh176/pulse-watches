@@ -29,9 +29,21 @@
     <meta property="twitter:description" content="Discover authentic luxury timepieces from world-renowned brands at Pulse Watches." />
     <meta property="twitter:image" content="https://pulsewatches.pk/images/hero-bg.jpg" />
     
+    <!-- Resource Hints - Setup connections FIRST (before everything) -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    
+    <!-- Preconnect - Establish connections immediately -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- LCP Image - Preload FIRST (highest priority, before CSS) -->
+    <!-- This is the most critical resource for LCP -->
+    <link rel="preload" as="image" href="/images/hero-bg.jpg" fetchpriority="high" />
+    
     <!-- Critical CSS Inline for Above-the-fold Content -->
     <style>
-      /* Critical CSS - Above the fold styles */
+      /* Critical CSS - Above the fold styles - minimal blocking */
       *{box-sizing:border-box;margin:0;padding:0}
       html,body,#root{height:100%;margin:0}
       body{
@@ -44,36 +56,33 @@
         -moz-osx-font-smoothing:grayscale
       }
       #root{min-height:100vh;display:flex;flex-direction:column}
-      /* Prevent layout shift */
       body{font-display:swap}
       img{max-width:100%;height:auto;display:block}
-      /* Reserve space for hero to prevent CLS */
-      section[role="region"]{min-height:400px;height:400px}
+      /* Reserve space for hero - prevents layout shift and ensures LCP element ready */
+      section[role="region"]{min-height:400px;height:400px;position:relative;background:#0e0e10}
       @media(min-width:768px){section[role="region"]{min-height:500px;height:500px}}
+      /* Optimize hero image rendering */
+      img[fetchpriority="high"]{content-visibility:auto}
     </style>
     
-    <!-- Resource Hints - Setup connections EARLY (before other resources) -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="dns-prefetch" href="https://pulsewatches.pk" />
-    
-    <!-- Preconnect - Establish connections in parallel with DNS prefetch -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- Preload Critical Resources - Highest Priority (Parallel Loading) -->
-    <!-- LCP Image - Load immediately, no dependencies -->
-    <link rel="preload" as="image" href="/images/hero-bg.jpg" fetchpriority="high" />
-    
     <!-- Preload Critical JavaScript Entry Point -->
-    <!-- This starts the JS chain early, in parallel with other resources -->
-    <link rel="modulepreload" href="/src/main.jsx" />
+    <!-- Load after image but in parallel -->
+    <link rel="modulepreload" href="/src/main.jsx" as="script" crossorigin />
     
-    <!-- Font loading - Deferred to reduce chain depth -->
-    <!-- Load font CSS asynchronously - does not block critical path -->
+    <!-- Font loading - Fully deferred to not block LCP -->
+    <!-- Load font CSS asynchronously after page load -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" as="style" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet" /></noscript>
+    <script>
+      // Load fonts after LCP - defer to not block image loading
+      window.addEventListener('load', function() {
+        var fontLink = document.createElement('link');
+        fontLink.rel = 'stylesheet';
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap';
+        document.head.appendChild(fontLink);
+      });
+    </script>
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://pulsewatches.pk/" />
@@ -84,15 +93,30 @@
   <body>
     <div id="root"></div>
     <!-- Defer JavaScript execution to improve FCP and LCP -->
+    <!-- Load JS after LCP image has started loading -->
     <script>
-      // Load script immediately but asynchronously - don't block rendering
+      // Defer JavaScript until after critical image starts loading
+      // This ensures LCP image gets network priority
       (function() {
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src = '/src/main.jsx';
-        script.setAttribute('async', '');
-        script.setAttribute('defer', '');
-        document.body.appendChild(script);
+        // Use requestIdleCallback to delay JS, but with timeout for faster sites
+        if (window.requestIdleCallback) {
+          requestIdleCallback(function() {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = '/src/main.jsx';
+            script.async = true;
+            document.body.appendChild(script);
+          }, { timeout: 100 });
+        } else {
+          // Fallback: minimal delay to let image start loading
+          setTimeout(function() {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = '/src/main.jsx';
+            script.async = true;
+            document.body.appendChild(script);
+          }, 0);
+        }
       })();
     </script>
   </body>

@@ -112,7 +112,12 @@ export default function Footer() {
                 </Typography>
                 <Stack direction="row" spacing={1}>
                   <IconButton 
+                    component="a"
+                    href="https://facebook.com/pulsewatches"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     size="small" 
+                    aria-label="Facebook"
                     sx={{ 
                       bgcolor: 'background.default',
                       '&:hover': { bgcolor: 'primary.main', color: 'black' }
@@ -121,7 +126,12 @@ export default function Footer() {
                     <FacebookIcon />
                   </IconButton>
                   <IconButton 
-                    size="small" 
+                    component="a"
+                    href="https://instagram.com/pulsewatches"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="small"
+                    aria-label="Instagram"
                     sx={{ 
                       bgcolor: 'background.default',
                       '&:hover': { bgcolor: 'primary.main', color: 'black' }
@@ -130,7 +140,12 @@ export default function Footer() {
                     <InstagramIcon />
                   </IconButton>
                   <IconButton 
-                    size="small" 
+                    component="a"
+                    href="https://twitter.com/pulsewatches"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="small"
+                    aria-label="Twitter"
                     sx={{ 
                       bgcolor: 'background.default',
                       '&:hover': { bgcolor: 'primary.main', color: 'black' }
@@ -139,7 +154,12 @@ export default function Footer() {
                     <TwitterIcon />
                   </IconButton>
                   <IconButton 
-                    size="small" 
+                    component="a"
+                    href="https://youtube.com/pulsewatches"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="small"
+                    aria-label="YouTube"
                     sx={{ 
                       bgcolor: 'background.default',
                       '&:hover': { bgcolor: 'primary.main', color: 'black' }
@@ -160,7 +180,8 @@ export default function Footer() {
             <Stack spacing={1}>
               <Link 
                 component={RouterLink} 
-                to="/?section=men" 
+                to="/?section=men"
+                href="/?section=men"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -172,7 +193,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/?section=women" 
+                to="/?section=women"
+                href="/?section=women"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -184,7 +206,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/?section=new" 
+                to="/?section=new"
+                href="/?section=new"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -196,7 +219,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/?section=featured" 
+                to="/?section=featured"
+                href="/?section=featured"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -217,7 +241,8 @@ export default function Footer() {
             <Stack spacing={1}>
               <Link 
                 component={RouterLink} 
-                to="/contact" 
+                to="/contact"
+                href="/contact"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -229,7 +254,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/about" 
+                to="/about"
+                href="/about"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -240,34 +266,37 @@ export default function Footer() {
                 About Us
               </Link>
               <Link 
+                component="a"
+                href="/shipping-info"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
                   transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 },
-                  cursor: 'pointer'
+                  '&:hover': { color: 'primary.main', pl: 0.5 }
                 }}
               >
                 Shipping Info
               </Link>
               <Link 
+                component="a"
+                href="/returns"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
                   transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 },
-                  cursor: 'pointer'
+                  '&:hover': { color: 'primary.main', pl: 0.5 }
                 }}
               >
                 Returns
               </Link>
               <Link 
+                component="a"
+                href="/faqs"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
                   transition: 'all 0.2s',
-                  '&:hover': { color: 'primary.main', pl: 0.5 },
-                  cursor: 'pointer'
+                  '&:hover': { color: 'primary.main', pl: 0.5 }
                 }}
               >
                 FAQs
@@ -283,7 +312,8 @@ export default function Footer() {
             <Stack spacing={1}>
               <Link 
                 component={RouterLink} 
-                to="/login" 
+                to="/login"
+                href="/login"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -295,7 +325,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/register" 
+                to="/register"
+                href="/register"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -307,7 +338,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/orders" 
+                to="/orders"
+                href="/orders"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -319,7 +351,8 @@ export default function Footer() {
               </Link>
               <Link 
                 component={RouterLink} 
-                to="/cart" 
+                to="/cart"
+                href="/cart"
                 underline="hover" 
                 color="text.secondary"
                 sx={{ 
@@ -389,34 +422,37 @@ export default function Footer() {
                 flexWrap="wrap"
               >
                 <Link 
+                  component="a"
+                  href="/privacy-policy"
                   underline="hover" 
                   color="text.secondary" 
                   sx={{ 
                     fontSize: '0.875rem',
-                    '&:hover': { color: 'primary.main' },
-                    cursor: 'pointer'
+                    '&:hover': { color: 'primary.main' }
                   }}
                 >
                   Privacy Policy
                 </Link>
                 <Link 
+                  component="a"
+                  href="/terms-of-service"
                   underline="hover" 
                   color="text.secondary" 
                   sx={{ 
                     fontSize: '0.875rem',
-                    '&:hover': { color: 'primary.main' },
-                    cursor: 'pointer'
+                    '&:hover': { color: 'primary.main' }
                   }}
                 >
                   Terms of Service
                 </Link>
                 <Link 
+                  component="a"
+                  href="/cookie-policy"
                   underline="hover" 
                   color="text.secondary" 
                   sx={{ 
                     fontSize: '0.875rem',
-                    '&:hover': { color: 'primary.main' },
-                    cursor: 'pointer'
+                    '&:hover': { color: 'primary.main' }
                   }}
                 >
                   Cookie Policy

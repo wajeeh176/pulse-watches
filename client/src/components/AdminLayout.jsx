@@ -49,6 +49,7 @@ export default function AdminLayout() {
           <Button
             component={RouterLink}
             to="/"
+            href="/"
             startIcon={<HomeIcon />}
             color="inherit"
           >
@@ -77,6 +78,7 @@ export default function AdminLayout() {
                 <ListItemButton
                   component={RouterLink}
                   to={item.path}
+                  href={item.path}
                   selected={location.pathname === item.path}
                   sx={{
                     '&.Mui-selected': {

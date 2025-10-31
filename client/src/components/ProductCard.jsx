@@ -26,7 +26,12 @@ const ProductCard = memo(function ProductCard({ product }) {
         }
       }}
     >
-      <CardActionArea component={RouterLink} to={`/product/${product.slug}`} sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start' }}>
+      <CardActionArea 
+        component={RouterLink} 
+        to={`/product/${product.slug}`}
+        href={`/product/${product.slug}`}
+        sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start' }}
+      >
         <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/3', minHeight: 220 }}>
           {!inStock && (
             <Chip 

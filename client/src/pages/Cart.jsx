@@ -28,7 +28,7 @@ export default function Cart() {
       <Container maxWidth="lg" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={800} align="center" gutterBottom>Shopping Cart</Typography>
       {cartItems.length === 0 ? (
-        <Typography align="center">Your cart is empty. <Button component={RouterLink} to="/" variant="text">Go Shopping</Button></Typography>
+        <Typography align="center">Your cart is empty. <Button component={RouterLink} to="/" href="/" variant="text">Go Shopping</Button></Typography>
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
@@ -79,7 +79,7 @@ export default function Cart() {
           <Grid item xs={12} md={4}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>Total: Rs. {totalPrice}</Typography>
-              <Button component={RouterLink} to="/checkout" variant="contained" color="primary" fullWidth>
+              <Button component={RouterLink} to="/checkout" href="/checkout" variant="contained" color="primary" fullWidth>
                 Proceed to Checkout
               </Button>
             </Paper>

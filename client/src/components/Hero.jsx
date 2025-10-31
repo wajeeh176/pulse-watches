@@ -27,7 +27,8 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
         willChange: 'auto'
       }}
     >
-      {/* Optimized hero image for LCP - using img instead of background-image */}
+      {/* Optimized hero image for LCP - Single source for fastest load */}
+      {/* For LCP, use single optimized image rather than picture element to avoid delay */}
       <Box
         component="img"
         src="/images/hero-bg.jpg"
@@ -37,7 +38,8 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
         height="800"
         fetchpriority="high"
         loading="eager"
-        decoding="async"
+        decoding="sync"
+        sizes="100vw"
         sx={{
           position: 'absolute',
           top: 0,
@@ -47,8 +49,13 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
           objectFit: 'cover',
           objectPosition: 'center',
           zIndex: 0,
-          // Prevent layout shift
-          aspectRatio: 'auto'
+          // Prevent layout shift - exact dimensions
+          minWidth: '100%',
+          minHeight: '100%',
+          // Optimize rendering for faster paint
+          willChange: 'auto',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden'
         }}
       />
       {/* Gradient overlay */}
@@ -106,7 +113,8 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
         <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" gap={2}>
           <Button 
             component={RouterLink} 
-            to="/?section=featured" 
+            to="/?section=featured"
+            href="/?section=featured"
             variant="contained" 
             color="primary" 
             size="large"
@@ -116,7 +124,8 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
           </Button>
           <Button 
             component={RouterLink} 
-            to="/?section=new" 
+            to="/?section=new"
+            href="/?section=new"
             variant="outlined" 
             size="large"
             sx={{ 

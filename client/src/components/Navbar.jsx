@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
@@ -12,7 +12,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -39,7 +38,7 @@ export default function Navbar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between', py: 1.5 }}>
           {/* Logo */}
-          <Button component={Link} to="/" color="inherit" sx={{ gap: 1.5, minWidth: 'auto' }}>
+          <Button component={Link} to="/" href="/" color="inherit" sx={{ gap: 1.5, minWidth: 'auto' }}>
             <Box 
               component="img" 
               src={logo} 
@@ -91,13 +90,13 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <Stack direction="row" spacing={1} sx={{ display: { xs: 'none', md: 'flex' }, flex: 1, justifyContent: 'center' }}>
-            <Button component={Link} to="/" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Featured</Button>
-            <Button component={Link} to="/?section=men" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Men's</Button>
-            <Button component={Link} to="/?section=women" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Women's</Button>
-            <Button component={Link} to="/?section=new" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>New</Button>
-            <Button component={Link} to="/cart" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Cart</Button>
-            <Button component={Link} to="/about" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>About</Button>
-            <Button component={Link} to="/contact" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Contact</Button>
+            <Button component={Link} to="/" href="/" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Featured</Button>
+            <Button component={Link} to="/?section=men" href="/?section=men" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Men's</Button>
+            <Button component={Link} to="/?section=women" href="/?section=women" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Women's</Button>
+            <Button component={Link} to="/?section=new" href="/?section=new" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>New</Button>
+            <Button component={Link} to="/cart" href="/cart" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Cart</Button>
+            <Button component={Link} to="/about" href="/about" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>About</Button>
+            <Button component={Link} to="/contact" href="/contact" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Contact</Button>
           </Stack>
 
           {/* User Actions */}
@@ -109,8 +108,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Button component={Link} to="/login" color="inherit" size="small">Login</Button>
-                <Button component={Link} to="/register" variant="contained" color="primary" size="small">Register</Button>
+                <Button component={Link} to="/login" href="/login" color="inherit" size="small">Login</Button>
+                <Button component={Link} to="/register" href="/register" variant="contained" color="primary" size="small">Register</Button>
               </>
             )}
           </Stack>

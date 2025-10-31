@@ -110,6 +110,7 @@ export default function Home(){
               <Card 
                 component={RouterLink} 
                 to={cat.link}
+                href={cat.link}
                 sx={{ 
                   textDecoration: 'none',
                   height: '100%',
