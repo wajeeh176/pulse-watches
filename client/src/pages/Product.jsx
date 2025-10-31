@@ -70,13 +70,17 @@ export default function Product() {
               decoding="async"
               width="800"
               height="520"
+              fetchpriority="high"
               sx={{ 
                 width: '100%', 
                 maxHeight: 520,
+                minHeight: 400,
                 aspectRatio: '3/4',
                 objectFit: 'contain', 
                 borderRadius: 1,
-                display: 'block'
+                display: 'block',
+                // Prevent layout shift
+                contentVisibility: 'auto'
               }}
             />
           </Box>

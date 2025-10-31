@@ -127,6 +127,7 @@ export default function Home(){
                   loading="lazy"
                   width="400"
                   height="200"
+                  fetchpriority="low"
                   sx={{ 
                     height: 200,
                     width: '100%',
@@ -134,7 +135,10 @@ export default function Home(){
                     objectFit: 'contain', 
                     p: 2, 
                     bgcolor: 'rgba(255,255,255,0.02)',
-                    display: 'block'
+                    display: 'block',
+                    // Prevent layout shift
+                    minHeight: 200,
+                    contentVisibility: 'auto'
                   }}
                 />
                 <CardContent>

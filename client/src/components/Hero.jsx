@@ -10,22 +10,63 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
   return (
     <Box
       component="section"
+      role="region"
+      aria-label="Hero section"
       sx={{
         position: 'relative',
-        backgroundImage: "linear-gradient(135deg, rgba(14,14,16,0.85) 0%, rgba(14,14,16,0.70) 100%), url('/images/hero-bg.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
         minHeight: { xs: '400px', md: '500px' },
+        height: { xs: '400px', md: '500px' },
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
+        overflow: 'hidden',
+        // Prevent layout shift - reserve space
+        backgroundColor: '#0e0e10',
+        // Optimize rendering
         willChange: 'auto'
       }}
     >
-      <Container maxWidth="md">
-        <Typography 
+      {/* Optimized hero image for LCP - using img instead of background-image */}
+      <Box
+        component="img"
+        src="/images/hero-bg.jpg"
+        alt=""
+        role="presentation"
+        width="1920"
+        height="800"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          zIndex: 0,
+          // Prevent layout shift
+          aspectRatio: 'auto'
+        }}
+      />
+      {/* Gradient overlay */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(135deg, rgba(14,14,16,0.85) 0%, rgba(14,14,16,0.70) 100%)',
+          zIndex: 1
+        }}
+      />
+      {/* Content */}
+      <Box sx={{ position: 'relative', zIndex: 2, width: '100%' }}>
+        <Container maxWidth="md">
+          <Typography 
           variant="overline" 
           sx={{ 
             color: 'primary.main', 
@@ -95,8 +136,9 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
           >
             New Arrivals
           </Button>
-        </Stack>
-      </Container>
+          </Stack>
+        </Container>
+      </Box>
     </Box>
   )
 }

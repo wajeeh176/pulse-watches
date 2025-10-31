@@ -46,12 +46,18 @@ export default function Navbar() {
               alt="Pulse Watches" 
               width="45"
               height="45"
+              loading="eager"
+              fetchpriority="high"
               sx={{ 
                 width: 45, 
-                height: 45, 
+                height: 45,
+                minWidth: 45,
+                minHeight: 45,
                 borderRadius: 2,
                 display: 'block',
-                flexShrink: 0
+                flexShrink: 0,
+                // Prevent layout shift
+                aspectRatio: '1/1'
               }} 
             />
             <Typography variant="h6" fontWeight={800} sx={{ display: { xs: 'none', sm: 'block' } }}>Pulse Watches</Typography>

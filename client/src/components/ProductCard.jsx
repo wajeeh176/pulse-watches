@@ -44,6 +44,7 @@ const ProductCard = memo(function ProductCard({ product }) {
             decoding="async"
             width="300"
             height="220"
+            fetchpriority="low"
             sx={{ 
               height: 220,
               width: '100%',
@@ -51,7 +52,10 @@ const ProductCard = memo(function ProductCard({ product }) {
               objectFit: 'contain', 
               p: 2,
               bgcolor: 'rgba(255,255,255,0.01)',
-              display: 'block'
+              display: 'block',
+              // Prevent layout shift
+              minHeight: 220,
+              contentVisibility: 'auto'
             }} 
           />
         </Box>

@@ -1,10 +1,11 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, memo } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+// Lazy load navbar and footer to reduce initial bundle
+const Navbar = lazy(() => import('./components/Navbar'));
+const Footer = lazy(() => import('./components/Footer'));
 import { PrivateRoute } from './components/PrivateRoute';
 import { AdminRoute } from './components/AdminRoute';
-import AdminLayout from './components/AdminLayout';
+const AdminLayout = lazy(() => import('./components/AdminLayout'));
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -24,7 +25,8 @@ const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
 
-export default function App() {
+// Memoize App to prevent unnecessary re-renders
+const App = memo(function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
@@ -58,7 +60,9 @@ export default function App() {
   // Public routes with navbar/footer
   return (
     <div className='app-root'>
-      <Navbar />
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <main className='page-container'>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
@@ -89,7 +93,11 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
-}
+});
+
+export default App;

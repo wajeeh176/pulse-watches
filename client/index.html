@@ -29,15 +29,51 @@
     <meta property="twitter:description" content="Discover authentic luxury timepieces from world-renowned brands at Pulse Watches." />
     <meta property="twitter:image" content="https://pulsewatches.pk/images/hero-bg.jpg" />
     
-    <!-- Preconnect for Performance -->
+    <!-- Critical CSS Inline for Above-the-fold Content -->
+    <style>
+      /* Critical CSS - Above the fold styles */
+      *{box-sizing:border-box;margin:0;padding:0}
+      html,body,#root{height:100%;margin:0}
+      body{
+        font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+        background:#0e0e10;
+        color:#fff;
+        line-height:1.5;
+        font-size:16px;
+        -webkit-font-smoothing:antialiased;
+        -moz-osx-font-smoothing:grayscale
+      }
+      #root{min-height:100vh;display:flex;flex-direction:column}
+      /* Prevent layout shift */
+      body{font-display:swap}
+      img{max-width:100%;height:auto;display:block}
+      /* Reserve space for hero to prevent CLS */
+      section[role="region"]{min-height:400px;height:400px}
+      @media(min-width:768px){section[role="region"]{min-height:500px;height:500px}}
+    </style>
+    
+    <!-- Resource Hints - Setup connections EARLY (before other resources) -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://pulsewatches.pk" />
+    
+    <!-- Preconnect - Establish connections in parallel with DNS prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <!-- DNS Prefetch -->
-    <link rel="dns-prefetch" href="https://pulsewatches.pk" />
-    
-    <!-- Preload Critical Images -->
+    <!-- Preload Critical Resources - Highest Priority (Parallel Loading) -->
+    <!-- LCP Image - Load immediately, no dependencies -->
     <link rel="preload" as="image" href="/images/hero-bg.jpg" fetchpriority="high" />
+    
+    <!-- Preload Critical JavaScript Entry Point -->
+    <!-- This starts the JS chain early, in parallel with other resources -->
+    <link rel="modulepreload" href="/src/main.jsx" />
+    
+    <!-- Font loading - Deferred to reduce chain depth -->
+    <!-- Load font CSS asynchronously - does not block critical path -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet" /></noscript>
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://pulsewatches.pk/" />
@@ -47,6 +83,17 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- Defer JavaScript execution to improve FCP and LCP -->
+    <script>
+      // Load script immediately but asynchronously - don't block rendering
+      (function() {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/src/main.jsx';
+        script.setAttribute('async', '');
+        script.setAttribute('defer', '');
+        document.body.appendChild(script);
+      })();
+    </script>
   </body>
 </html>

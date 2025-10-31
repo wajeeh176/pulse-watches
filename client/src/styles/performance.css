@@ -16,6 +16,25 @@ img {
 /* Prevent layout shifts during font load */
 body {
   font-display: swap;
+  /* Reserve space to prevent layout shift */
+  min-height: 100vh;
+  /* Prevent font swap layout shift */
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Ensure images don't cause layout shift */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  /* Reserve space until image loads */
+  aspect-ratio: attr(width) / attr(height);
+}
+
+/* Prevent layout shift for lazy loaded images */
+img[loading="lazy"] {
+  content-visibility: auto;
 }
 
 /* Reserve space for loading states */
@@ -29,6 +48,25 @@ body {
 /* Prevent layout shift from product grid */
 .product-grid-container {
   min-height: 500px;
+}
+
+/* Prevent layout shift from grid containers */
+.MuiGrid-container {
+  min-height: 0; /* Prevent unexpected expansion */
+}
+
+/* Prevent layout shift from cards */
+.MuiCard-root {
+  min-height: 0;
+  contain: layout;
+}
+
+/* Prevent layout shift from buttons */
+button,
+a[role="button"],
+.MuiButton-root {
+  min-height: 36px;
+  contain: layout;
 }
 
 /* Prevent navbar shift */
