@@ -19,17 +19,10 @@ const ProductCard = memo(function ProductCard({ product }) {
       sx={{ 
         height: '100%', 
         backgroundImage: theme => `linear-gradient(180deg, ${theme.palette.action.hover}, transparent)`,
-        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        willChange: 'transform, box-shadow',
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden',
+        transition: 'all 0.3s ease',
         '&:hover': {
-          transform: 'translateY(-8px) translateZ(0)',
-          boxShadow: 4,
-          willChange: 'transform'
-        },
-        '&:not(:hover)': {
-          willChange: 'auto'
+          transform: 'translateY(-8px)',
+          boxShadow: 4
         }
       }}
     >

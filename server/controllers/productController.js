@@ -40,25 +40,14 @@ exports.getProducts = async (req, res) => {
       .limit(limit)
       .lean();
     
-    // Get total count for pagination metadata
-    const total = await Product.countDocuments(filter);
-    
-    const result = {
-      products,
-      pagination: {
-        total,
-        page,
-        limit,
-        pages: Math.ceil(total / limit)
-      }
-    };
-    
-    // Store in cache
+    // Store in cache (store as array for consistency)
     cache.set(cacheKey, products);
     
     // Set cache header
     res.set('Cache-Control', 'public, max-age=300');
-    res.json(products);
+    
+    // Always return products as an array for client compatibility
+    res.json(products || []);
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ message: 'Server error' });

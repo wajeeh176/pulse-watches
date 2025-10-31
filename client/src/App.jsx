@@ -1,14 +1,12 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { PrivateRoute } from './components/PrivateRoute';
 import { AdminRoute } from './components/AdminRoute';
-
-// Lazy load components to reduce initial bundle
-const Navbar = lazy(() => import('./components/Navbar'));
-const Footer = lazy(() => import('./components/Footer'));
-const AdminLayout = lazy(() => import('./components/AdminLayout'));
+import AdminLayout from './components/AdminLayout';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
@@ -60,9 +58,7 @@ export default function App() {
   // Public routes with navbar/footer
   return (
     <div className='app-root'>
-      <Suspense fallback={<Box sx={{ minHeight: 64 }} />}>
-        <Navbar />
-      </Suspense>
+      <Navbar />
       <main className='page-container'>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
@@ -93,9 +89,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Suspense fallback={null}>
-        <Footer />
-      </Suspense>
+      <Footer />
     </div>
   );
 }

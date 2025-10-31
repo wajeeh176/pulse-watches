@@ -39,11 +39,21 @@ export default function Home(){
     
     API.get("/products", { signal })
       .then((res) => {
-        setProducts(res.data || []);
+        // Handle both array and object response formats
+        let productsData = res.data;
+        if (productsData && productsData.products && Array.isArray(productsData.products)) {
+          productsData = productsData.products;
+        } else if (!Array.isArray(productsData)) {
+          productsData = [];
+        }
+        setProducts(productsData || []);
       })
       .catch((e) => {
         if (!axios.isCancel(e)) {
-          console.error(e);
+          console.error('Error fetching products:', e);
+          console.error('Response:', e.response);
+          // Set empty array on error
+          setProducts([]);
         }
       })
       .finally(() => setLoading(false));
@@ -65,7 +75,10 @@ export default function Home(){
   }, [])
 
   // Memoize the filtered list to prevent recalculation on every render
-  const list = useMemo(() => filterBy(section, products, searchQ, sort), [section, products, searchQ, sort, filterBy])
+  const list = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    return filterBy(section, products, searchQ, sort);
+  }, [section, products, searchQ, sort, filterBy])
   const title = section === 'featured' ? 'Featured Watches' : section === 'men' ? "Men's Collection" : section === 'women' ? "Women's Collection" : 'New Arrivals'
 
   const categories = [
@@ -100,17 +113,10 @@ export default function Home(){
                 sx={{ 
                   textDecoration: 'none',
                   height: '100%',
-                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  willChange: 'transform, box-shadow',
-                  transform: 'translateZ(0)',
-                  backfaceVisibility: 'hidden',
+                  transition: 'all 0.3s',
                   '&:hover': { 
-                    transform: 'translateY(-8px) translateZ(0)',
-                    boxShadow: 6,
-                    willChange: 'transform'
-                  },
-                  '&:not(:hover)': {
-                    willChange: 'auto'
+                    transform: 'translateY(-8px)',
+                    boxShadow: 6
                   }
                 }}
               >
@@ -199,18 +205,27 @@ export default function Home(){
           </Box>
         ) : (
           <Box sx={{ minHeight: '600px' }}>
-            <Grid container spacing={3}>
-              {list.map(p=> (
-                <Grid item key={p._id} xs={12} sm={6} md={4} lg={3}>
-                  <ProductCard product={p} />
-                </Grid>
-              ))}
-              {list.length === 0 && (
-                <Grid item xs={12}>
-                  <Typography align="center" sx={{ py: 4, minHeight: '200px' }}>No products in this section.</Typography>
-                </Grid>
-              )}
-            </Grid>
+            {products.length === 0 ? (
+              <Typography align="center" sx={{ py: 4, minHeight: '200px' }}>
+                No products available. Please check if the server is running and products are seeded.
+              </Typography>
+            ) : (
+              <Grid container spacing={3}>
+                {list.length > 0 ? (
+                  list.map(p=> (
+                    <Grid item key={p._id} xs={12} sm={6} md={4} lg={3}>
+                      <ProductCard product={p} />
+                    </Grid>
+                  ))
+                ) : (
+                  <Grid item xs={12}>
+                    <Typography align="center" sx={{ py: 4, minHeight: '200px' }}>
+                      No products match your selection. Try a different category or search term.
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
+            )}
           </Box>
         )}
       </Container>

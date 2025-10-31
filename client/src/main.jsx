@@ -9,10 +9,8 @@ import './styles/index.css';
 import './styles/performance.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import LazyToastContainer from './components/LazyToastContainer';
-
-// Lazy load toast styles to reduce initial bundle
-// Will be loaded when LazyToastContainer is imported
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createTheme({
   palette: {
@@ -38,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <CartProvider>
             <BrowserRouter>
               <App />
-              <LazyToastContainer
+              <ToastContainer
                 position="top-right"
                 autoClose={3000}
                 hideProgressBar={false}

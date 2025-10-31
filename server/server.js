@@ -26,7 +26,6 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
   const mongoOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    poolSize: 10, // Maintain up to 10 socket connections
     serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
     socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     family: 4 // Use IPv4, skip trying IPv6

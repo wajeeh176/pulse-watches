@@ -130,18 +130,11 @@ export default function Contact(){
                   height: '100%',
                   border: 1,
                   borderColor: 'divider',
-                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease',
-                  willChange: 'transform, box-shadow',
-                  transform: 'translateZ(0)',
-                  backfaceVisibility: 'hidden',
+                  transition: 'all 0.3s',
                   '&:hover': {
-                    transform: 'translateY(-8px) translateZ(0)',
+                    transform: 'translateY(-8px)',
                     boxShadow: 4,
-                    borderColor: 'primary.main',
-                    willChange: 'transform'
-                  },
-                  '&:not(:hover)': {
-                    willChange: 'auto'
+                    borderColor: 'primary.main'
                   }
                 }}
               >
