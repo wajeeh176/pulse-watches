@@ -3,6 +3,7 @@
 /client/node_modules
 
 # Environment files
+/server/.env
 # Build folders
 /server/dist
 /client/dist

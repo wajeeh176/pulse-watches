@@ -1,4 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+// Paper imported above
+import Tooltip from '@mui/material/Tooltip';
+import LinearProgress from '@mui/material/LinearProgress';
+import PreviewIcon from '@mui/icons-material/Visibility';
+import ClearIcon from '@mui/icons-material/Clear';
+import DOMPurify from 'dompurify';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -37,9 +45,30 @@ export default function AdminProducts() {
     category: '',
     brand: '',
     countInStock: '',
-    images: []
+    images: [],
+    // SEO inputs (keywords as comma-separated string in the UI)
+    seoTitle: '',
+    seoDescription: '',
+    seoKeywords: ''
   });
   const [imageInput, setImageInput] = useState('');
+  const [generatingSEO, setGeneratingSEO] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
+
+  const quillModules = useMemo(() => ({
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ]
+  }), []);
+
+  const quillFormats = useMemo(() => [
+    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'list', 'bullet', 'link', 'image'
+  ], []);
 
   useEffect(() => {
     fetchProducts();
@@ -59,7 +88,12 @@ export default function AdminProducts() {
   const handleOpen = (product = null) => {
     if (product) {
       setEditMode(true);
-      setCurrentProduct(product);
+      setCurrentProduct({
+        ...product,
+        seoKeywords: Array.isArray(product.seoKeywords) ? product.seoKeywords.join(', ') : (product.seoKeywords || ''),
+        seoTitle: product.seoTitle || '',
+        seoDescription: product.seoDescription || ''
+      });
     } else {
       setEditMode(false);
       setCurrentProduct({
@@ -69,7 +103,10 @@ export default function AdminProducts() {
         category: '',
         brand: '',
         countInStock: '',
-        images: []
+        images: [],
+        seoTitle: '',
+        seoDescription: '',
+        seoKeywords: ''
       });
       setImageInput('');
     }
@@ -85,25 +122,70 @@ export default function AdminProducts() {
       category: '',
       brand: '',
       countInStock: '',
-      images: []
+      images: [],
+      seoTitle: '',
+      seoDescription: '',
+      seoKeywords: ''
     });
     setImageInput('');
   };
 
+  const handleGenerateSEO = async () => {
+    try {
+      if (!currentProduct.title && !currentProduct.description) {
+        toast.error('Please provide a title or description to generate SEO');
+        return;
+      }
+      setGeneratingSEO(true);
+      const res = await API.post('/products/generate-seo', {
+        title: currentProduct.title,
+        description: currentProduct.description
+      });
+      console.log('Generate SEO response:', res);
+      const { seoTitle, seoDescription, seoKeywords } = res.data || {};
+      setCurrentProduct(prev => ({
+        ...prev,
+        seoTitle: seoTitle || prev.seoTitle,
+        seoDescription: seoDescription || prev.seoDescription,
+        seoKeywords: Array.isArray(seoKeywords) ? seoKeywords.join(', ') : (seoKeywords || prev.seoKeywords)
+      }));
+      // Log the new state for debug
+      console.log('Updated currentProduct after SEO generation:', {
+        seoTitle: seoTitle || currentProduct.seoTitle,
+        seoDescription: seoDescription || currentProduct.seoDescription,
+        seoKeywords: Array.isArray(seoKeywords) ? seoKeywords.join(', ') : (seoKeywords || currentProduct.seoKeywords)
+      });
+      toast.success('SEO generated successfully');
+    } catch (error) {
+      console.error('Generate SEO error:', error);
+      toast.error(error.response?.data?.message || 'Failed to generate SEO');
+    } finally {
+      setGeneratingSEO(false);
+    }
+  };
+
   const handleSave = async () => {
     try {
+      // Coerce numeric fields before sending
+      const payload = {
+        ...currentProduct,
+        price: currentProduct.price !== '' ? Number(currentProduct.price) : undefined,
+        countInStock: currentProduct.countInStock !== '' ? Number(currentProduct.countInStock) : undefined,
+      };
+
       if (editMode) {
-        await API.put(`/products/${currentProduct._id}`, currentProduct);
+        await API.put(`/products/${currentProduct._id}`, payload);
         toast.success('Product updated successfully!');
       } else {
-        await API.post('/products', currentProduct);
+        await API.post('/products', payload);
         toast.success('Product added successfully!');
       }
       handleClose();
       fetchProducts();
     } catch (error) {
+      // Log detailed server response for debugging
+      console.error('Save product error response:', error.response?.data || error);
       toast.error(error.response?.data?.message || 'Failed to save product');
-      console.error(error);
     }
   };
 
@@ -206,16 +288,97 @@ export default function AdminProducts() {
             margin="normal"
             required
           />
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Description</span>
+              <span style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                <Typography variant="caption" color="text.secondary">{(currentProduct.description || '').replace(/<[^>]+>/g, '').length} chars</Typography>
+              </span>
+            </Typography>
+
+            <Paper variant="outlined" sx={{ p: 2, background: 'rgb(31,34,38)', boxShadow: theme => `0 6px 18px rgba(15,23,42,0.06)` }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Box>
+                  <Tooltip title={previewMode ? 'Exit preview' : 'Preview description'}>
+                    <IconButton size="small" onClick={() => setPreviewMode((v) => !v)}>
+                      <PreviewIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Clear description">
+                    <IconButton size="small" onClick={() => setCurrentProduct(prev => ({ ...prev, description: '' }))}>
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+                <Typography variant="caption" color="text.secondary">Rich text editor — HTML will be saved. Use headings & lists.</Typography>
+              </Box>
+
+              {previewMode ? (
+                <Box sx={{ p: 2, minHeight: 140, borderRadius: 1, background: theme => theme.palette.background.paper }}>
+                  <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(currentProduct.description || '') }} />
+                </Box>
+              ) : (
+                <Box sx={{
+                  '.ql-toolbar': { borderRadius: '8px 8px 0 0', border: theme => `1px solid ${theme.palette.divider}`, borderBottom: 0, background: 'rgb(31,34,38)', color: '#fff' },
+                  '.ql-container': { minHeight: 240, border: theme => `1px solid ${theme.palette.divider}`, borderRadius: '0 0 8px 8px', boxShadow: '0 6px 18px rgba(15,23,42,0.04)', background: 'rgb(31,34,38)' },
+                  '.ql-editor': { minHeight: 180, fontSize: 15, lineHeight: '1.6', padding: '14px', color: '#ffffff', background: 'transparent' },
+                  '.ql-editor.ql-blank::before': { color: 'rgba(255,255,255,0.6)' }
+                }}>
+                  <ReactQuill
+                    theme="snow"
+                    value={currentProduct.description || ''}
+                    onChange={(value) => setCurrentProduct(prev => ({ ...prev, description: value }))}
+                    modules={quillModules}
+                    formats={quillFormats}
+                    placeholder="Write product description here — highlight features, specs, fit, and care instructions."
+                  />
+                </Box>
+              )}
+              <Box sx={{ mt: 1 }}>
+                <LinearProgress variant="determinate" value={Math.min(100, Math.round(((currentProduct.description || '').replace(/<[^>]+>/g, '').length / 160) * 100))} />
+                <Typography variant="caption" color="text.secondary">Recommended meta length: up to 160 characters. ({(currentProduct.description || '').replace(/<[^>]+>/g, '').length} chars)</Typography>
+              </Box>
+            </Paper>
+          </Box>
           <TextField
-            label="Description"
-            name="description"
-            value={currentProduct.description}
+            label="SEO Title"
+            name="seoTitle"
+            value={currentProduct.seoTitle}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="SEO Description"
+            name="seoDescription"
+            value={currentProduct.seoDescription}
             onChange={handleChange}
             fullWidth
             margin="normal"
             multiline
-            rows={3}
+            rows={2}
           />
+          <TextField
+            label="SEO Keywords (comma separated)"
+            name="seoKeywords"
+            value={currentProduct.seoKeywords}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            placeholder="e.g., luxury, gold, men"
+          />
+          <Box sx={{ display: 'flex', gap: 2, mt: 1, mb: 1 }}>
+            <Button
+              variant="outlined"
+              onClick={handleGenerateSEO}
+              disabled={generatingSEO}
+            >
+              {generatingSEO ? 'Generating...' : 'Generate SEO'}
+            </Button>
+            <Typography variant="caption" color="text.secondary" sx={{ alignSelf: 'center' }}>
+              Use product title & description to auto-create SEO fields.
+            </Typography>
+          </Box>
           <TextField
             label="Brand"
             name="brand"

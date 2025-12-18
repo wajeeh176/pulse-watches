@@ -43,6 +43,26 @@ export default function Checkout() {
     }
   };
 
+  const handleStripeCheckout = async () => {
+    if (!name || !email || !address) return toast.error('Please fill all fields');
+    if (!cartItems.length) return toast.error('Your cart is empty');
+
+    try {
+      const items = cartItems.map(item => ({ _id: item._id, title: item.title, price: item.price, qty: item.qty, description: item.description || item.title }));
+      const shippingAddress = { name, email, address };
+      const res = await API.post('/payments/create-checkout-session', { items, shippingAddress }, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.data?.url) {
+        window.location.href = res.data.url;
+      } else {
+        toast.error('Could not create checkout session');
+        console.error('Stripe create session response:', res);
+      }
+    } catch (err) {
+      console.error('Stripe checkout error:', err);
+      toast.error(err.response?.data?.message || 'Failed to initiate payment');
+    }
+  };
+
   if (submitted)
     return (
       <>
@@ -96,7 +116,8 @@ export default function Checkout() {
               <TextField label="Name" value={name} onChange={e => setName(e.target.value)} fullWidth required sx={{ mb: 2 }} />
               <TextField type="email" label="Email" value={email} onChange={e => setEmail(e.target.value)} fullWidth required sx={{ mb: 2 }} />
               <TextField label="Address" value={address} onChange={e => setAddress(e.target.value)} fullWidth required multiline minRows={3} sx={{ mb: 2 }} />
-              <Button type="submit" variant="contained" color="primary" fullWidth>Place Order</Button>
+              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mb: 1 }}>Place Order</Button>
+              <Button type="button" variant="outlined" color="secondary" fullWidth onClick={handleStripeCheckout}>Pay with Card</Button>
             </Box>
           </Paper>
         </Grid>
