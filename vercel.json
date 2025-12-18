@@ -6,8 +6,5 @@
       "config": { "distDir": "client/dist" }
     }
   ],
-  "routes": [
-    { "src": "^/$", "dest": "/client/dist/index.html" },
-    { "src": "^/(.*)$", "dest": "/client/dist/$1" }
-  ]
+  "cleanUrls": true
 }
