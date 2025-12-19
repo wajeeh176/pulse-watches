@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
 const Product = lazy(() => import('./pages/Product'));
+const Products = lazy(() => import('./pages/Products'));
 const Cart = lazy(() => import('./pages/Cart'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const Login = lazy(() => import('./pages/Login'));
@@ -67,6 +68,7 @@ const App = memo(function App() {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path='/' element={<Home />} />
+            <Route path='/products' element={<Products />} />
             <Route path='/product/:slug' element={<Product />} />
             <Route path='/cart' element={<Cart />} />
             <Route path='/about' element={<About />} />

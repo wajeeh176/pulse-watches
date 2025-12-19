@@ -1,4 +1,5 @@
 // client/src/pages/Product.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -22,7 +23,6 @@ export default function Product() {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
-
     API.get(`/products/${slug}`)
       .then((res) => {
         setProduct(res.data);
@@ -87,7 +87,11 @@ export default function Product() {
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" fontWeight={800} gutterBottom>{product.title}</Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>{product.description}</Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+            {typeof product.description === 'string'
+              ? product.description.replace(/^<p>|<\/p>$/gi, '')
+              : product.description}
+          </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
             <Typography variant="h5" color="primary" fontWeight={800}>Rs. {product.price}</Typography>
             <Chip label={inStock ? 'In Stock' : 'Out of Stock'} color={inStock ? 'success' : 'error'} variant="outlined" />

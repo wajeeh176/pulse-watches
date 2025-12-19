@@ -90,10 +90,10 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <Stack direction="row" spacing={1} sx={{ display: { xs: 'none', md: 'flex' }, flex: 1, justifyContent: 'center' }}>
-            <Button component={Link} to="/" href="/" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Featured</Button>
-            <Button component={Link} to="/?section=men" href="/?section=men" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Men's</Button>
-            <Button component={Link} to="/?section=women" href="/?section=women" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Women's</Button>
-            <Button component={Link} to="/?section=new" href="/?section=new" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>New</Button>
+            <Button component={Link} to="/products?section=featured" href="/products?section=featured" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Featured</Button>
+            <Button component={Link} to="/products?section=men" href="/products?section=men" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Men's</Button>
+            <Button component={Link} to="/products?section=women" href="/products?section=women" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Women's</Button>
+            <Button component={Link} to="/products?section=new" href="/products?section=new" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>New</Button>
             <Button component={Link} to="/cart" href="/cart" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Cart</Button>
             <Button component={Link} to="/about" href="/about" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>About</Button>
             <Button component={Link} to="/contact" href="/contact" color="inherit" sx={{ '&:hover': { bgcolor: 'rgba(196, 151, 91, 0.1)' } }}>Contact</Button>

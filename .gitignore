@@ -11,3 +11,4 @@
 
 # Optional logs
 *.log
+node_modules

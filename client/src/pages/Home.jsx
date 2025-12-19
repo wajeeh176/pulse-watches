@@ -82,10 +82,10 @@ export default function Home(){
   const title = section === 'featured' ? 'Featured Watches' : section === 'men' ? "Men's Collection" : section === 'women' ? "Women's Collection" : 'New Arrivals'
 
   const categories = [
-    { name: "Men's Watches", img: '/images/rolex.png', link: '/?section=men' },
-    { name: "Women's Watches", img: '/images/tissot.png', link: '/?section=women' },
-    { name: 'Luxury Collection', img: '/images/patek.png', link: '/?section=featured' },
-    { name: 'New Arrivals', img: '/images/citizen.png', link: '/?section=new' },
+    { name: "Men's Watches", img: '/images/rolex.png', link: '/products?section=men' },
+    { name: "Women's Watches", img: '/images/tissot.png', link: '/products?section=women' },
+    { name: 'Luxury Collection', img: '/images/patek.png', link: '/products?section=featured' },
+    { name: 'New Arrivals', img: '/images/citizen.png', link: '/products?section=new' },
   ]
 
   return (
@@ -104,53 +104,56 @@ export default function Home(){
         <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 4 }}>
           Explore our curated collections
         </Typography>
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3, justifyContent: 'center', alignItems: 'stretch', flexWrap: 'nowrap', overflowX: 'auto', pb: 2 }}>
           {categories.map((cat, idx) => (
-            <Grid item xs={6} sm={6} md={3} key={idx}>
-              <Card 
-                component={RouterLink} 
-                to={cat.link}
-                href={cat.link}
+            <Card 
+              key={idx}
+              component={RouterLink} 
+              to={cat.link}
+              href={cat.link}
+              sx={{ 
+                minWidth: 220,
+                maxWidth: 260,
+                textDecoration: 'none',
+                height: '100%',
+                transition: 'all 0.3s',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                '&:hover': { 
+                  transform: 'translateY(-8px)',
+                  boxShadow: 6
+                }
+              }}
+            >
+              <CardMedia
+                component="img"
+                image={cat.img}
+                alt={cat.name}
+                loading="lazy"
+                width="180"
+                height="100"
+                fetchpriority="low"
                 sx={{ 
-                  textDecoration: 'none',
-                  height: '100%',
-                  transition: 'all 0.3s',
-                  '&:hover': { 
-                    transform: 'translateY(-8px)',
-                    boxShadow: 6
-                  }
+                  height: 100,
+                  width: 180,
+                  aspectRatio: '2/1',
+                  objectFit: 'contain', 
+                  p: 2, 
+                  bgcolor: 'rgba(255,255,255,0.02)',
+                  display: 'block',
+                  minHeight: 100,
+                  contentVisibility: 'auto'
                 }}
-              >
-                <CardMedia
-                  component="img"
-                  image={cat.img}
-                  alt={cat.name}
-                  loading="lazy"
-                  width="400"
-                  height="200"
-                  fetchpriority="low"
-                  sx={{ 
-                    height: 200,
-                    width: '100%',
-                    aspectRatio: '2/1',
-                    objectFit: 'contain', 
-                    p: 2, 
-                    bgcolor: 'rgba(255,255,255,0.02)',
-                    display: 'block',
-                    // Prevent layout shift
-                    minHeight: 200,
-                    contentVisibility: 'auto'
-                  }}
-                />
-                <CardContent>
-                  <Typography variant="subtitle1" fontWeight={700} align="center">
-                    {cat.name}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+              />
+              <CardContent>
+                <Typography variant="subtitle1" fontWeight={700} align="center">
+                  {cat.name}
+                </Typography>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </Box>
       </Container>
 
       <Divider />
@@ -164,7 +167,12 @@ export default function Home(){
               <Typography variant="body1">Get free shipping on orders above Rs. 10,000</Typography>
             </Grid>
             <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-              <Button variant="contained" sx={{ bgcolor: 'black', color: 'primary.main', '&:hover': { bgcolor: '#333' } }}>
+              <Button
+                variant="contained"
+                component={RouterLink}
+                to="/products"
+                sx={{ bgcolor: 'black', color: 'primary.main', '&:hover': { bgcolor: '#333' } }}
+              >
                 Shop Now
               </Button>
             </Grid>

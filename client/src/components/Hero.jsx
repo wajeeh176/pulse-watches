@@ -113,8 +113,8 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
         <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" gap={2}>
           <Button 
             component={RouterLink} 
-            to="/?section=featured"
-            href="/?section=featured"
+            to="/products"
+            href="/products"
             variant="contained" 
             color="primary" 
             size="large"
@@ -122,29 +122,7 @@ export default function Hero({ title = 'Luxury Watches', subtitle = 'Premium col
           >
             Shop Now
           </Button>
-          <Button 
-            component={RouterLink} 
-            to="/?section=new"
-            href="/?section=new"
-            variant="outlined" 
-            size="large"
-            sx={{ 
-              px: 5, 
-              py: 1.8, 
-              fontWeight: 700,
-              fontSize: '1.1rem',
-              borderColor: 'rgba(255,255,255,0.4)',
-              color: 'white',
-              borderWidth: 2,
-              '&:hover': {
-                borderColor: 'primary.main',
-                backgroundColor: 'rgba(196,151,91,0.15)',
-                borderWidth: 2
-              }
-            }}
-          >
-            New Arrivals
-          </Button>
+          {/* Removed New Arrivals button */}
           </Stack>
         </Container>
       </Box>
